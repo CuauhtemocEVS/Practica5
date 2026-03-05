@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Práctica5">
         <activity
+            android:name=".SeatSelection"
+            android:exported="false" />
+        <activity
             android:name=".Catalogo"
             android:exported="false" />
         <activity
