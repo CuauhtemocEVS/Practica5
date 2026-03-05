@@ -100,7 +100,7 @@ class PeliculaAdapter : BaseAdapter{
             intento.putExtra("image", peliculas.image)
             intento.putExtra("header", peliculas.header)
             intento.putExtra("sinopsis", peliculas.sinopsis)
-            intento.putExtra("numeberSeats", (20-peliculas.seats.size))
+            intento.putExtra("numberSeats", (20-peliculas.seats.size))
             context!!.startActivity(intento)
         }
 
