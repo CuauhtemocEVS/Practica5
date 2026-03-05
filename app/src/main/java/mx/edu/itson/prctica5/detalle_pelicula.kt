@@ -12,6 +12,7 @@ import android.widget.TextView
 
 
 class detalle_pelicula : AppCompatActivity() {
+    var seatsAvailable = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -30,16 +31,18 @@ class detalle_pelicula : AppCompatActivity() {
             tv_nombre_pelicula.setText(bundle.getString("titulo"))
             tv_nombre_desc.setText(bundle.getString("sinopsis"))
 
-            // Recibimos los asientos y actualizamos el texto como pide el PDF
-            val seatsAvailable = bundle.getInt("numberSeats")
+
+            seatsAvailable = intent.getIntExtra("numeberSeats", 20)
             tv_seats_left.text = "$seatsAvailable seats available"
         }
 
         btn_buy_tickets.setOnClickListener {
             val intent = Intent(this, SeatSelection::class.java)
-            // Pasamos el título para mostrarlo en la siguiente pantalla
             intent.putExtra("titulo", tv_nombre_pelicula.text.toString())
-            startActivity(intent)
+            intent.putExtra("asientosTotales", seatsAvailable) // Le pasamos a los asientos cuántos quedan
+
+            // Usamos startActivityForResult para "esperar" a que regrese la nueva cantidad
+            startActivityForResult(intent, 100)
         }
 
 
@@ -47,6 +50,19 @@ class detalle_pelicula : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+            if (data != null) {
+                // Sacamos la nueva cantidad de asientos y actualizamos el texto
+                seatsAvailable = data.getIntExtra("asientosRestantes", seatsAvailable)
+                val tv_seats_left: TextView = findViewById(R.id.seatLeft)
+                tv_seats_left.text = "$seatsAvailable seats available"
+            }
         }
     }
 }
